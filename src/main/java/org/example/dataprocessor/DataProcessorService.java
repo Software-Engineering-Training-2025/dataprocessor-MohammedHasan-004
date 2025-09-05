@@ -29,7 +29,16 @@ public class DataProcessorService {
             AnalysisType analysisType,
             OutputType outputType,
             List<Integer> data) throws Exception {
-
+        List<Integer> working = (data == null) ? List.of() : new ArrayList<>(data);
+        CleaningStrategy cleaner = Cleaningfactory.getcleaningtype(cleaningType);
+        AnalysisStrategy analyzer = analysisfactory.getanlysis(analysisType);
+        OutputStrategy output = outputfactory.getoutput(outputType);
+        List<Integer> cleaned = (cleaner == null) ? working : cleaner.clean(working);
+        double result = (analyzer == null) ? Double.NaN : analyzer.analyse(cleaned);
+        if (output!=null){
+            output.write(result);
+        }
+        return result;
         // TODO: implement using the enums only (no long if/else ladders required,
         // but minimal branching to select behavior by enum is acceptable in this task).
         // Steps:
@@ -38,7 +47,7 @@ public class DataProcessorService {
         // 3) Output according to outputType (console or target/result.txt).
         // 4) Return the numeric result.
 
-        throw new UnsupportedOperationException("Student must implement process(...)");
+        //throw new UnsupportedOperationException("Student must implement process(...)");
     }
 }
 
